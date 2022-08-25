@@ -26,7 +26,10 @@ import {
         return () => setLoading(false);
       }, []);
 
+
+
       async function signUp() {
+        //Keyboard.dismiss();
         setLoading(true);
         if (password != confirmPassword) {
           setErrorText("Your passwords don't match. Check and try again.");
@@ -97,7 +100,10 @@ import {
             onChangeText={(pw) => setConfirmPassword(pw)}
           />
         </View>
+        //if in Login Screen, the above text will not appear.
       )}
+
+      
   
     <TouchableOpacity
         style={styles.button}
@@ -118,6 +124,7 @@ import {
         onPress={() => {
           setIsLoginScreen(!isLoginScreen);
           setErrorText("");
+          // ""  blank space for error text to print
         }}
       >
         <Text style={styles.switchText}>
@@ -125,6 +132,7 @@ import {
             ? "No account? Sign up now."
             : "Already have an account? Log in here."}
         </Text>
+
       </TouchableOpacity>
 
 
