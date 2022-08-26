@@ -11,6 +11,8 @@ export const AUTH_SCREEN = "AUTH_SCREEN"
 export const PROFILE_SCREEN = "PROFILE_SCREEN"
 
 export const HOME_STACK = "HOME_STACK";
+export const NOTES_STACK = "NOTES_STACK";
+
 
 export const NOTES_SCREEN = {
   Home: "NotesScreenHome",
