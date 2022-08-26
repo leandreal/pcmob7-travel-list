@@ -45,6 +45,7 @@ import {
             });
             if (response.data.Error) {
               // We have an error message for if the user already exists
+              setLoading(false);
               setErrorText(response.data.Error);
             } else {
               login();
