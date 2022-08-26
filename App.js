@@ -10,7 +10,19 @@ import AuthScreen from "./screens/AuthScreen";
 //import { AUTH_SCREEN, PROFILE_SCREEN } from "./constants";
 const Stack = createStackNavigator();
 
+import { Provider } from "react-redux";
+import store from "./store";
+
 export default function App() {
+  return (
+    <Provider store={store}>
+      <AppSource />
+    </Provider>
+  );
+}
+
+function AppSource() {
+
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
 
