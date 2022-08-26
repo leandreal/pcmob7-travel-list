@@ -46,7 +46,7 @@ export default function NotesScreenHome() {
   const styles = StyleSheet.create({
     noteCard: {
       borderColor: "gray",
-      borderWidth: "1px",
+      borderWidth: 1,
       padding: 15,
       borderRadius: 5,
       marginBottom: 15,
