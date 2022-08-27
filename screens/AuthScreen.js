@@ -1,10 +1,13 @@
 import {
     ActivityIndicator,
     Keyboard,
+    LayoutAnimation,
+    Platform,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
+    UIManager,
     View,
   } from "react-native";
   import React, { useState, useEffect } from "react";
@@ -13,6 +16,14 @@ import {
   import AsyncStorage from "@react-native-async-storage/async-storage";
   import { API, API_LOGIN, API_SIGNUP, HOME_STACK } from "../constants";
   
+  if (
+    Platform.OS === "android" &&
+    UIManager.setLayoutAnimationEnabledExperimental
+  ) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+
+
   export default function AuthScreen() {
     const navigation = useNavigation();
     const [username, setUsername] = useState("");
@@ -53,6 +64,9 @@ import {
           } catch (error) {
             console.log("Failed logging in. Error: ", error.response);
             setErrorText(error.response.data.description);
+          } finally {
+            setLoading(false);
+            LayoutAnimation.spring();
           }
         }
       }
@@ -73,9 +87,12 @@ import {
       } catch (error) {
         console.log(error.response);
         setErrorText(error.response.data.description);
+      } finally {
+        setLoading(false);
+        LayoutAnimation.spring();
       }
-      setLoading(false);
     }
+
     return (
         <View style={styles.container}>
           <Text style={styles.title}>
@@ -109,27 +126,30 @@ import {
         //if in Login Screen, the above text will not appear.
       )}
 
-      
-  
     <TouchableOpacity
-        style={styles.button}
+        style={loading ? styles.buttonLoading : styles.button}
         onPress={async () => {
+          LayoutAnimation.spring();
+          setErrorText("");
           isLoginScreen ? await login() : await signUp();
         }}
       >
-          {loading ? (
-            <ActivityIndicator style={styles.buttonText} />
-          ) : (
-            <Text style={styles.buttonText}>
+        {loading ? (
+          <ActivityIndicator style={styles.buttonText} />
+        ) : (
+          <Text style={styles.buttonText}>
             {isLoginScreen ? "Login" : "Register"}
           </Text>
-          )}
-        </TouchableOpacity>
+        )}
+      </TouchableOpacity>
+
+    
 
         <TouchableOpacity
-        onPress={() => {
-          setIsLoginScreen(!isLoginScreen);
-          setErrorText("");
+          onPress={() => {
+            LayoutAnimation.easeInEaseOut();
+            setIsLoginScreen(!isLoginScreen);
+            setErrorText("");
           // ""  blank space for error text to print
         }}
       >
@@ -149,6 +169,12 @@ import {
   }
   
   const styles = StyleSheet.create({
+    buttonLoading: {
+      backgroundColor: "black",
+      borderRadius: 15,
+      width: "20%",
+      marginHorizontal: "40%",
+    },
     switchText: {
       fontSize: 20,
       marginTop: 20,
