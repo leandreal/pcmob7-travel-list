@@ -16,20 +16,29 @@ import {
 export default function NotesScreenHome() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  // state.notes refers to NotesSlice.js intial state
+  // const initialState = {
+    //posts: [],
+    //status: API_STATUS.idle,
+    //error: null,}
   const posts = useSelector((state) => state.notes.posts);
   const notesStatus = useSelector((state) => state.notes.status);
   const isLoading = notesStatus === API_STATUS.pending;
-
+  
+  // UseEffect Hook below
   useEffect(() => {
     if (notesStatus === API_STATUS.idle) {
       dispatch(fetchPosts());
     }
+    // if idle = fetch posts if otherwise dispatch???  
+    // Avoid multiple calls to database - for app optimisation/efficiency
   }, [notesStatus, dispatch]);
 
 
     function renderItem({ item }) {
       return (
-        <TouchableOpacity style={styles.noteCard} onPress={() => {}}>
+        <TouchableOpacity style={styles.noteCard} 
+        onPress={() => navigation.navigate(NOTES_SCREEN.Details, item)}>
           <Text style={styles.noteCardTitle}>{item.title}</Text>
           <Text style={styles.noteCardBodyText}>
             {item.content.substring(0, 120)}
