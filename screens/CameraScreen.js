@@ -1,14 +1,17 @@
 import { FontAwesome } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { PROFILE_SCREEN } from "../constants";
+
 
 export default function CameraScreen() {
   const navigation = useNavigation();
-
   const [back, setBack] = useState(true);
   const cameraRef = useRef(null);
+  const [hasPermission, setHasPermission] = useState(null);
 
   useEffect(() => {
     // Remove the bottom tab
@@ -16,13 +19,21 @@ export default function CameraScreen() {
     return () => navigation.getParent()?.setOptions({ tabBarStyle: undefined });
   }, [navigation]);
 
-  async function showCamera() {}
+  async function showCamera() {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    setHasPermission(status === "granted");
+    if (hasPermission === false) Alert.alert("Error: No access given");
+  }
 
   function flip() {
     setBack(!back);
   }
 
-  async function takePicture() {}
+  async function takePicture() {
+    const photo = await cameraRef.current.takePictureAsync();
+    await AsyncStorage.setItem("photo_uri", photo.uri);
+    navigation.navigate(PROFILE_SCREEN);
+  }
 
   useEffect(() => {
     showCamera();
