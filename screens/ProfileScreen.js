@@ -53,7 +53,7 @@ export default function ProfileScreen() {
 
       <Image
         source={{ uri: photoUri ?? imgPlaceholder }}
-        style={{ height: 120, width: 120, borderRadius: 3, marginBottom: 20}}
+        style={{ height: 100, width: 100, borderRadius: 100, marginBottom: 20}}
         />
 
 
