@@ -20,7 +20,9 @@ export default function NotesScreenAdd() {
   const [noteTitle, setNoteTitle] = useState("");
   const [noteBody, setNoteBody] = useState("");
   const dispatch = useDispatch();
+  //useDispatch hook above
 
+  // if every is a truthy value - truthy/falsey value - boolean
   const canSave = [noteTitle, noteBody].every(Boolean);
 
   async function savePost() {
@@ -28,6 +30,7 @@ export default function NotesScreenAdd() {
       try {
         const post = {
           id: nanoid(),
+          // nanoid is a function that gives us a random id.
           title: noteTitle,
           content: noteBody,
         };
@@ -37,6 +40,7 @@ export default function NotesScreenAdd() {
       } finally {
         navigation.goBack();
       }
+      // finally means go back to Home Page 
     }
   }
 

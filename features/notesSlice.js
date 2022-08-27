@@ -30,6 +30,22 @@ export const addNewPost = createAsyncThunk(
   }
 );
 
+export const updatePostThunk = createAsyncThunk(
+  "posts/updatePost",
+  async (updatedPost) => {
+    const token = await AsyncStorage.getItem("token");
+    const response = await axios.put(
+      API + API_POSTS + "/" + updatedPost.id,
+      updatedPost,
+      {
+        headers: { Authorization: `JWT ${token}` },
+      }
+    );
+    return response.data;
+  }
+);
+
+
 
 const notesSlice = createSlice({
   name: "notes",
@@ -40,6 +56,7 @@ const notesSlice = createSlice({
         state.status = API_STATUS.pending;
         // pending means loading
       })
+      
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = API_STATUS.fulfilled;
         // Add any fetched posts to the array
@@ -50,18 +67,30 @@ const notesSlice = createSlice({
         // fulfilled means "success" status
         state.posts = state.posts.concat(action.payload);
       })
+
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = API_STATUS.rejected;
         state.error = action.error.message;
         console.log("Failed to fetch posts. Error:", action.error.message);
       })
+
       .addCase(addNewPost.fulfilled, (state, action) => {
         state.posts.push(action.payload);
         // can be any status eg pending, rejected, idle, fulfilled
         // action.payload is the response data above
+      })
+
+      .addCase(updatePostThunk.fulfilled, (state, action) => {
+        const { id, title, content } = action.payload;
+        const existingPost = state.posts.find((post) => post.id === id);
+        if (existingPost) {
+          existingPost.title = title;
+          existingPost.content = content;
+        }
       });
   },
 });
+
 
 //export const { noteAdded } = notesSlice.actions;
 

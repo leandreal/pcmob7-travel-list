@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { updatePostThunk } from "../features/notesSlice";
 
 export default function NotesScreenDetails() {
   const route = useRoute();
@@ -19,6 +21,24 @@ export default function NotesScreenDetails() {
   const [noteTitle, setNoteTitle] = useState(params.title);
   const [noteBody, setNoteBody] = useState(params.content);
   const [editable, setEditable] = useState(false);
+  const dispatch = useDispatch();
+  const id = params.id;
+
+  async function updatePost(id) {
+    try {
+      const updatedPost = {
+        id,
+        title: noteTitle,
+        content: noteBody,
+      };
+      await dispatch(updatePostThunk(updatedPost));
+    } catch (error) {
+      console.error("Failed to update the post: ", error);
+    } finally {
+      navigation.goBack();
+    }
+  }
+
 
   return (
     <KeyboardAvoidingView
@@ -72,12 +92,16 @@ export default function NotesScreenDetails() {
         multiline={true}
       />
       <View style={{ flex: 1 }} />
-      <TouchableOpacity style={styles.button} onPress={async () => {}}>
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={async () => updatePost(id)}>
+
         <Text style={styles.buttonText}>Save</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

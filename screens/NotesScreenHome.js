@@ -47,6 +47,21 @@ export default function NotesScreenHome() {
         //substring - 0 to 120 characters
       );
     }
+
+    // If isLoading = true
+    // {isLoading && <ActivityIndicator />}
+    // Will show <ActivityIndicator />}
+    // otherwise it may show a <View/> an empty container
+    // for optimisation?
+
+    // If isLoading = false
+    // {isLoading && <ActivityIndicator />}
+    // Will show empty space ie nothing
+
+    // {isLoading ? <ActivityIndicator/> : <View/>}
+    // it works, but with extra code.
+
+
     return (
       <View style={styles.container}>
         <Text style={styles.title}>notes</Text>
