@@ -38,10 +38,16 @@ const notesSlice = createSlice({
     builder
       .addCase(fetchPosts.pending, (state) => {
         state.status = API_STATUS.pending;
+        // pending means loading
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = API_STATUS.fulfilled;
         // Add any fetched posts to the array
+        // API_STATUS - A structured way of calling data from an API
+        // concat means replacing a new post in my array
+        // action.payload refers to the response.data
+        // example of response.data is {id : 1, title: "Hello", content: "World"}
+        // fulfilled means "success" status
         state.posts = state.posts.concat(action.payload);
       })
       .addCase(fetchPosts.rejected, (state, action) => {
@@ -51,6 +57,8 @@ const notesSlice = createSlice({
       })
       .addCase(addNewPost.fulfilled, (state, action) => {
         state.posts.push(action.payload);
+        // can be any status eg pending, rejected, idle, fulfilled
+        // action.payload is the response data above
       });
   },
 });
