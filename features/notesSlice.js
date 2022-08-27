@@ -20,8 +20,8 @@ const initialState = {
 
 export const fetchPosts = createAsyncThunk("notes/fetchPosts", async () => {
   const querySnapshot = await getDocs(collection(db, "notes"));
-  const notes = querySnapshot.docs.map((doc) => {
-    return { id: doc.id, ...doc.data() };
+  const notes = querySnapshot.docs.map((doc, index) => {
+    return { id: doc.id, ...doc.data(), index };
   });
   return notes;
 });
