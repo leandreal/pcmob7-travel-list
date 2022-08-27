@@ -2,6 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API, API_CREATE, API_POSTS, API_STATUS } from "../constants";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 //Slice - To breakup Reducer's Logic
 
@@ -12,11 +14,11 @@ const initialState = {
 };
 
 export const fetchPosts = createAsyncThunk("notes/fetchPosts", async () => {
-  const token = await AsyncStorage.getItem("token");
-  const response = await axios.get(API + API_POSTS, {
-    headers: { Authorization: `JWT ${token}` },
+  const querySnapshot = await getDocs(collection(db, "notes"));
+  const notes = querySnapshot.docs.map((doc) => {
+    return { id: doc.id, ...doc.data() };
   });
-  return response.data;
+  return notes;
 });
 
 export const addNewPost = createAsyncThunk(
@@ -113,6 +115,9 @@ const notesSlice = createSlice({
       .addCase(deletePostThunk.fulfilled, (state, action) => {
         const id = action.payload;
         const updatedPosts = state.posts.filter((item) => item.id !== id);
+        // filter removes anything that does not equal to our id.  
+        // filter shows only those that equate to the id.
+
         state.posts = updatedPosts;
       });
   },
