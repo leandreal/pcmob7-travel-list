@@ -11,10 +11,11 @@ import {
   View,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { updatePostThunk } from "../features/notesSlice";
+import { deletePostThunk, updatePostThunk } from "../features/notesSlice";
 
 export default function NotesScreenDetails() {
   const route = useRoute();
+  // useRoute is like useState but doesnt update the variable itself
   const titleInputRef = useRef();
   const navigation = useNavigation();
   const params = route.params;
@@ -23,6 +24,8 @@ export default function NotesScreenDetails() {
   const [editable, setEditable] = useState(false);
   const dispatch = useDispatch();
   const id = params.id;
+
+  //console.log(route.params);
 
   async function updatePost(id) {
     try {
@@ -39,6 +42,19 @@ export default function NotesScreenDetails() {
     }
   }
 
+  async function deletePost(id) {
+    try {
+      await dispatch(deletePostThunk(id));
+    } catch (error) {
+      console.error("Failed to update the post: ", error);
+    } finally {
+      navigation.goBack();
+    }
+  }
+
+
+
+  //KB Avoiding View - moves keyboard to the top???
 
   return (
     <KeyboardAvoidingView
@@ -60,19 +76,26 @@ export default function NotesScreenDetails() {
             } else {
               setTimeout(() => titleInputRef.current.blur(), 100);
             }
+            //need to wait cos editable for a while 100ms is 0.1 secs.
           }}
         >
           <FontAwesome
             name={"pencil"}
             size={24}
             color={editable ? "forestgreen" : "black"}
+            // if screen can edit - it will be green.   if not, it will be black.
           />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}} style={{ marginLeft: 15 }}>
+        <TouchableOpacity 
+          onPress={() => deletePost(id)} 
+          style={{ marginLeft: 15 }}>
+          
+          
           <FontAwesome name={"trash"} size={24} color={"black"} />
         </TouchableOpacity>
       </View>
+
       <TextInput
         style={styles.noteTitle}
         placeholder={"note title"}

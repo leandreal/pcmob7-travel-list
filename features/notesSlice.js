@@ -33,6 +33,7 @@ export const addNewPost = createAsyncThunk(
 export const updatePostThunk = createAsyncThunk(
   "posts/updatePost",
   async (updatedPost) => {
+    // (updatedPost) is the action.payload here
     const token = await AsyncStorage.getItem("token");
     const response = await axios.put(
       API + API_POSTS + "/" + updatedPost.id,
@@ -42,6 +43,17 @@ export const updatePostThunk = createAsyncThunk(
       }
     );
     return response.data;
+  }
+);
+
+export const deletePostThunk = createAsyncThunk(
+  "posts/deletePost",
+  async (id) => {
+    const token = await AsyncStorage.getItem("token");
+    await axios.delete(API + API_POSTS + `/${id}`, {
+      headers: { Authorization: `JWT ${token}` },
+    });
+    return id;
   }
 );
 
@@ -82,16 +94,34 @@ const notesSlice = createSlice({
 
       .addCase(updatePostThunk.fulfilled, (state, action) => {
         const { id, title, content } = action.payload;
+        // destructure the payload above.
+        // const id = action.payload.id
+        // const title = action.payload.title
+        // const content = action.payload.content
+        //  We are creating constants above.
+
+
         const existingPost = state.posts.find((post) => post.id === id);
+        // update existing post above. === must be equal to 
         if (existingPost) {
           existingPost.title = title;
           existingPost.content = content;
+          // if there is existing post, it will be overridden with the update.
         }
+      })
+
+      .addCase(deletePostThunk.fulfilled, (state, action) => {
+        const id = action.payload;
+        const updatedPosts = state.posts.filter((item) => item.id !== id);
+        state.posts = updatedPosts;
       });
   },
 });
 
 
+
 //export const { noteAdded } = notesSlice.actions;
 
 export default notesSlice.reducer;
+
+//notesSlice consists of all the logic of the app.
