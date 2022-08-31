@@ -7,6 +7,7 @@ import {
     View,
   } from "react-native";
   import React, { useEffect } from "react";
+  import Animated, { FlipInYRight, FadeOutDown } from "react-native-reanimated"
   import { useDispatch, useSelector } from "react-redux";
   import { useNavigation } from "@react-navigation/native";
   import { API_STATUS, NOTES_SCREEN } from "../constants";
@@ -37,16 +38,24 @@ export default function NotesScreenHome() {
 
     function renderItem({ item }) {
       return (
-        <TouchableOpacity style={styles.noteCard} 
+        <Animated.View
+          entering={FlipInYRight.delay(item.index * 200)}
+          exiting={FadeOutDown.delay(item.index * 200)}
+        >
+
+        <TouchableOpacity 
+        style={styles.noteCard} 
         onPress={() => navigation.navigate(NOTES_SCREEN.Details, item)}>
           <Text style={styles.noteCardTitle}>{item.title}</Text>
           <Text style={styles.noteCardBodyText}>
             {item.content.substring(0, 120)}
           </Text>
         </TouchableOpacity>
-        //substring - 0 to 120 characters
+        </Animated.View>
+      
       );
     }
+
 
     // If isLoading = true
     // {isLoading && <ActivityIndicator />}
