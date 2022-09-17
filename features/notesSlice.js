@@ -21,6 +21,7 @@ const initialState = {
 export const fetchPosts = createAsyncThunk("notes/fetchPosts", async () => {
   const querySnapshot = await getDocs(collection(db, "notes"));
   const notes = querySnapshot.docs.map((doc, index) => {
+    // doc.data() = {title: 'shoes', content:'100KRW' }
     return { id: doc.id, ...doc.data(), index };
   });
   return notes;

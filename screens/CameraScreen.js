@@ -1,10 +1,10 @@
 import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
-import { PROFILE_SCREEN } from "../constants";
+import { NOTES_SCREEN, PROFILE_SCREEN } from "../constants";
 
 
 export default function CameraScreen() {
@@ -12,6 +12,9 @@ export default function CameraScreen() {
   const [back, setBack] = useState(true);
   const cameraRef = useRef(null);
   const [hasPermission, setHasPermission] = useState(null);
+  const route = useRoute();
+  const fromNotes = route.params?.fromNotes;
+
 
   useEffect(() => {
     // Remove the bottom tab
@@ -31,8 +34,9 @@ export default function CameraScreen() {
 
   async function takePicture() {
     const photo = await cameraRef.current.takePictureAsync();
+    
     await AsyncStorage.setItem("photo_uri", photo.uri);
-    navigation.navigate(PROFILE_SCREEN);
+    navigation.navigate(fromNotes?NOTES_SCREEN.Add : PROFILE_SCREEN);
   }
 
   useEffect(() => {
@@ -49,7 +53,7 @@ export default function CameraScreen() {
         <View style={additionalStyles.innerView}>
           <View style={additionalStyles.buttonView}>
             <TouchableOpacity
-              onPress={() => navigation.goBack()}
+              onPress={() => fromNotes?navigation.navigate(NOTES_SCREEN.Add): navigation.goBack()}
               style={additionalStyles.circleButton}
             >
               <FontAwesome

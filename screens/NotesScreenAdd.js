@@ -2,6 +2,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -13,15 +14,36 @@ import {
 import { nanoid } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import { addNewPost } from "../features/notesSlice";
+import { CAMERA_SCREEN } from "../constants";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function NotesScreenAdd() {
   const navigation = useNavigation();
   const [noteTitle, setNoteTitle] = useState("");
   const [noteBody, setNoteBody] = useState("");
+  const [image, setImage] = useState("../assets/placeholder.jpeg");
   const dispatch = useDispatch();
   //useDispatch hook above
 
+  async function loadImage() {
+    const photo = await AsyncStorage.getItem("photo_uri");
+    setImage(photo)
+  }
+  useEffect(() => {
+    const removeListener = navigation.addListener("focus", () => {
+  
+      loadImage();
+    });
+
+
+      loadImage();
+    return () => {
+      removeListener();
+    };
+  }, []);
+  
   // if every is a truthy value - truthy/falsey value - boolean
   const canSave = [noteTitle, noteBody].every(Boolean);
 
@@ -53,16 +75,30 @@ export default function NotesScreenAdd() {
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <FontAwesome name={"arrow-left"} size={24} color={"black"} />
       </TouchableOpacity>
+
+      
+
+      <Image
+        source={{ uri: image }} 
+        style={{ height: 150, width: 150, borderRadius: 150, marginTop: 30, marginBottom: 30, alignSelf: "center", }}
+        />
+
+      <TouchableOpacity onPress={() => navigation.navigate(CAMERA_SCREEN, {fromNotes: true})} style={{ alignSelf: "center" }}>
+        <FontAwesome name={"camera"} size={24} color={"black"}/>
+      </TouchableOpacity>
+
+      <Text style={{ textAlign: "center", marginTop: 10, marginBottom: 30, }} >Upload Receipt Here</Text>
+
       <TextInput
         style={styles.noteTitle}
-        placeholder={"note title"}
+        placeholder={"Add Item Here"}
         value={noteTitle}
         onChangeText={(text) => setNoteTitle(text)}
         selectionColor={"gray"}
       />
       <TextInput
         style={styles.noteBody}
-        placeholder={"Add your notes"}
+        placeholder={"Enter Amount Here"}
         value={noteBody}
         onChangeText={(text) => setNoteBody(text)}
         selectionColor={"gray"}
@@ -72,7 +108,7 @@ export default function NotesScreenAdd() {
       <TouchableOpacity 
         style={styles.button} 
         onPress={async () => await savePost()}>
-        <Text style={styles.buttonText}>Add Note</Text>
+        <Text style={styles.buttonText}>Update List</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -96,16 +132,17 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   button: {
-    backgroundColor: "black",
+    backgroundColor: "turquoise",
     borderRadius: 15,
-    width: "100%",
+    width: "50%",
     marginBottom: 20,
+    alignSelf: 'center',
   },
   buttonText: {
     textAlign: "center",
     fontWeight: "400",
     fontSize: 17,
     padding: 20,
-    color: "white",
+    color: "black",
   },
 });

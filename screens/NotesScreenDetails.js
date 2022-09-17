@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { deletePostThunk, updatePostThunk } from "../features/notesSlice";
@@ -21,6 +22,7 @@ export default function NotesScreenDetails() {
   const params = route.params;
   const [noteTitle, setNoteTitle] = useState(params.title);
   const [noteBody, setNoteBody] = useState(params.content);
+  const [foreignCurrency, setForeignCurrency] = useState(params.foreign_currency)
   const [editable, setEditable] = useState(false);
   const dispatch = useDispatch();
   const id = params.id;
@@ -33,6 +35,7 @@ export default function NotesScreenDetails() {
         id,
         title: noteTitle,
         content: noteBody,
+        foreign_currency: foreignCurrency,
       };
       await dispatch(updatePostThunk(updatedPost));
     } catch (error) {
@@ -61,11 +64,14 @@ export default function NotesScreenDetails() {
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+
+
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome name={"arrow-left"} size={24} color={"black"} />
         </TouchableOpacity>
 
+      
         <View style={{ flex: 1 }} />
 
         <TouchableOpacity
@@ -96,23 +102,35 @@ export default function NotesScreenDetails() {
         </TouchableOpacity>
       </View>
 
+
+
       <TextInput
         style={styles.noteTitle}
-        placeholder={"note title"}
+        placeholder={"Enter Expense Details Here"}
         value={noteTitle}
         onChangeText={(text) => setNoteTitle(text)}
         selectionColor={"gray"}
         editable={editable}
         ref={titleInputRef}
+        
       />
       <TextInput
         style={styles.noteBody}
-        placeholder={"Add your notes"}
+        placeholder={"Enter Expense Amount Here"}
         value={noteBody}
         onChangeText={(text) => setNoteBody(text)}
         selectionColor={"gray"}
         editable={editable}
-        multiline={true}
+      
+      />
+      <TextInput
+        style={styles.noteBody}
+        placeholder={""}
+        value={foreignCurrency}
+        onChangeText={(text) => setForeignCurrency(text)}
+        selectionColor={"gray"}
+        //editable={editable}
+       
       />
       <View style={{ flex: 1 }} />
       <TouchableOpacity 
@@ -132,27 +150,33 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     padding: 25,
   },
+
   noteTitle: {
     fontSize: 24,
     fontWeight: "600",
     marginTop: 30,
     marginBottom: 25,
   },
+
   noteBody: {
     fontSize: 15,
     fontWeight: "400",
+    marginTop: 30,
+    marginBottom: 25,
   },
+
   button: {
-    backgroundColor: "black",
+    backgroundColor: "turquoise",
     borderRadius: 15,
-    width: "100%",
+    width: "50%",
     marginBottom: 20,
+    alignSelf: 'center',
   },
   buttonText: {
     textAlign: "center",
     fontWeight: "400",
     fontSize: 17,
     padding: 20,
-    color: "white",
+    color: "black",
   },
 });

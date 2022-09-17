@@ -46,16 +46,24 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>profile</Text>
-      <Text style={{ fontSize: 20, fontWeight: "700", marginBottom: 10 }}>
-        your user name: {username}
-      </Text>
+      <View style={styles.header} >
+          <Image source={{uri: 'https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/2x/external-checklist-airport-kiranshastry-gradient-kiranshastry.png'}}
+          style={{width: 100, height: 100}} />
 
+          <Text style={styles.logo}>Travel-List</Text>
+      </View>
+
+      <View>
+        <Text style={styles.title}>Your Profile</Text>
+        <Text style={{ fontSize: 20, fontWeight: "700", marginBottom: 10, textAlign: "center", color: "cadetblue" }}>
+          your user name: {username}
+      </Text>
+      </View>
+      
       <Image
         source={{ uri: photoUri ?? imgPlaceholder }}
-        style={{ height: 100, width: 100, borderRadius: 100, marginBottom: 20}}
+        style={{ height: 100, width: 100, borderRadius: 100, marginVertical: 20, alignSelf: "center" }}
         />
-
 
 
       <TouchableOpacity
@@ -86,15 +94,33 @@ const styles = StyleSheet.create({
     paddingTop: 100,
     padding: 25,
   },
+
   title: {
     fontWeight: "bold",
     fontSize: 40,
     marginBottom: 20,
+    textAlign: "center",
+    color: "darkturquoise",
+  },
+
+  header: {
+    flexDirection: 'row',
+    paddingBottom: 30,
+    marginBottom: 20,
+  },
+
+  
+  logo: {
+    fontWeight: "bold",
+    fontSize: 40,
+    margin: 20,
+    color: 'turquoise',
   },
   outlinedButton: {
     borderRadius: 3,
     borderWidth: 1,
     width: 120,
+    alignSelf: "center",
   },
   outlinedButtonText: {
     textAlign: "center",
@@ -104,15 +130,16 @@ const styles = StyleSheet.create({
     color: "black",
   },
   button: {
-    backgroundColor: "black",
+    backgroundColor: "turquoise",
     borderRadius: 15,
-    width: "100%",
+    width: "50%",
+    alignSelf: 'center',
   },
   buttonText: {
     textAlign: "center",
     fontWeight: "400",
     fontSize: 17,
     padding: 20,
-    color: "white",
+    color: "black",
   },
 });

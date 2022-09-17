@@ -5,6 +5,9 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Image,
+    TextInput,
+    
   } from "react-native";
   import React, { useEffect } from "react";
   import Animated, { FlipInYRight, FadeOutDown } from "react-native-reanimated"
@@ -12,6 +15,7 @@ import {
   import { useNavigation } from "@react-navigation/native";
   import { API_STATUS, NOTES_SCREEN } from "../constants";
   import { fetchPosts } from "../features/notesSlice";
+
 
 
 export default function NotesScreenHome() {
@@ -48,7 +52,10 @@ export default function NotesScreenHome() {
         onPress={() => navigation.navigate(NOTES_SCREEN.Details, item)}>
           <Text style={styles.noteCardTitle}>{item.title}</Text>
           <Text style={styles.noteCardBodyText}>
-            {item.content.substring(0, 120)}
+          KRW {item.content}
+          </Text>
+          <Text style={styles.noteCardBodyText}>
+            SGD {item.content / 2}
           </Text>
         </TouchableOpacity>
         </Animated.View>
@@ -73,9 +80,28 @@ export default function NotesScreenHome() {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>notes</Text>
-  
+
+       <View style={styles.header} >
+          <Image source={{uri: 'https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/2x/external-checklist-airport-kiranshastry-gradient-kiranshastry.png'}}
+          style={{width: 100, height: 100}} />
+
+          <Text style={styles.logo}>Travel-List</Text>
+      </View>
+
+      <View style={styles.header} >
+          <Text style={styles.rates}>Rate of Exchange: </Text>
+          <Text style={styles.rates}>KRW  </Text>
+          <TextInput style={{backgroundColor: "aquamarine", width: 50, borderWidth: 0.5, textAlign: 'center', borderRadius: 5,}}></TextInput>
+          <Text style={styles.rates}> = SGD  </Text>          
+          <TextInput style={{backgroundColor: "aquamarine", width: 50, borderWidth: 0.5, textAlign: 'center', borderRadius: 5,}}></TextInput>
+
+       </View>
+        
         {isLoading && <ActivityIndicator />}
+
+    
+
+    
 
         <FlatList
           data={posts}
@@ -83,53 +109,77 @@ export default function NotesScreenHome() {
           keyExtractor={(post) => post.id.toString()}
         />
   
+        
+
         <View style={{ flex: 1 }} />
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate(NOTES_SCREEN.Add)}
       >
-          <Text style={styles.buttonText}>Add Note</Text>
+          <Text style={styles.buttonText}>Add Item</Text>
         </TouchableOpacity>
       </View>
     );
   }
   
   const styles = StyleSheet.create({
-    noteCard: {
-      borderColor: "gray",
-      borderWidth: 1,
-      padding: 15,
-      borderRadius: 5,
-      marginBottom: 15,
-    },
-    noteCardTitle: {
-      fontSize: 13,
-      fontWeight: "500",
-      marginBottom: 7,
-    },
-    noteCardBodyText: {
-      fontSize: 12,
-      fontWeight: "300",
-    },
     container: {
       flex: 1,
       backgroundColor: "#fff",
       paddingTop: 100,
       padding: 25,
     },
-    title: {
-      fontWeight: "bold",
-      fontSize: 40,
+
+    header: {
+      flexDirection: 'row',
+      paddingBottom: 30,
       marginBottom: 20,
     },
-    button: {
-      backgroundColor: "black",
-      borderRadius: 15,
-      width: "100%",
+
+    rate: {
+      flexDirection: 'row',
+      paddingBottom: 30,
+      marginBottom: 20,
     },
+
+    logo: {
+      fontWeight: "bold",
+      fontSize: 40,
+      margin: 20,
+      color: 'turquoise',
+    },
+
+    noteCard: {
+      borderColor: "gray",
+      borderWidth: 1,
+      padding: 15,
+      borderRadius: 5,
+      marginBottom: 15,
+      flexDirection: 'row',
+    },
+    noteCardTitle: {
+      fontSize: 13,
+      fontWeight: "500",
+      marginBottom: 7,
+      flex: 1/3,
+    },
+    noteCardBodyText: {
+      fontSize: 12,
+      fontWeight: "300",
+      flex: 1/3,
+    },
+    
+    
+    button: {
+      backgroundColor: "turquoise",
+      borderRadius: 15,
+      width: "50%",
+      alignSelf: 'center',
+    },
+
     buttonText: {
       textAlign: "center",
       fontWeight: "400",
       fontSize: 17,
       padding: 20,
-      color: "white",
+      color: "black",
     },
   });
