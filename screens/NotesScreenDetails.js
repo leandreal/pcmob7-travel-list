@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -9,10 +9,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
   
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { deletePostThunk, updatePostThunk } from "../features/notesSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CAMERA_SCREEN } from "../constants";
 
 export default function NotesScreenDetails() {
   const route = useRoute();
@@ -22,8 +25,9 @@ export default function NotesScreenDetails() {
   const params = route.params;
   const [noteTitle, setNoteTitle] = useState(params.title);
   const [noteBody, setNoteBody] = useState(params.content);
-  const [foreignCurrency, setForeignCurrency] = useState(params.foreign_currency)
+ 
   const [editable, setEditable] = useState(false);
+  const [image, setImage] = useState("../assets/placeholder.jpeg");
   const dispatch = useDispatch();
   const id = params.id;
 
@@ -35,8 +39,9 @@ export default function NotesScreenDetails() {
         id,
         title: noteTitle,
         content: noteBody,
-        foreign_currency: foreignCurrency,
+      
       };
+      console.log(updatedPost)
       await dispatch(updatePostThunk(updatedPost));
     } catch (error) {
       console.error("Failed to update the post: ", error);
@@ -55,7 +60,22 @@ export default function NotesScreenDetails() {
     }
   }
 
+  async function loadImage() {
+    const photo = await AsyncStorage.getItem("photo_uri");
+    setImage(photo)
+  }
+  useEffect(() => {
+    const removeListener = navigation.addListener("focus", () => {
+  
+      loadImage();
+    });
 
+
+      loadImage();
+    return () => {
+      removeListener();
+    };
+  }, []);
 
   //KB Avoiding View - moves keyboard to the top???
 
@@ -103,6 +123,17 @@ export default function NotesScreenDetails() {
       </View>
 
 
+      <Image
+        source={{ uri: image }} 
+        style={{ height: 150, width: 150, borderRadius: 150, marginTop: 30, marginBottom: 30, alignSelf: "center", }}
+        />
+
+      <TouchableOpacity onPress={() => navigation.navigate(CAMERA_SCREEN, {fromDetails: true})} style={{ alignSelf: "center" }}>
+        <FontAwesome name={"camera"} size={24} color={"black"}/>
+      </TouchableOpacity>
+
+      <Text style={{ textAlign: "center", marginTop: 10, marginBottom: 30, }} >Upload Receipt Here</Text>
+
 
       <TextInput
         style={styles.noteTitle}
@@ -121,17 +152,9 @@ export default function NotesScreenDetails() {
         onChangeText={(text) => setNoteBody(text)}
         selectionColor={"gray"}
         editable={editable}
+        
+      />
       
-      />
-      <TextInput
-        style={styles.noteBody}
-        placeholder={""}
-        value={foreignCurrency}
-        onChangeText={(text) => setForeignCurrency(text)}
-        selectionColor={"gray"}
-        //editable={editable}
-       
-      />
       <View style={{ flex: 1 }} />
       <TouchableOpacity 
         style={styles.button} 

@@ -38,6 +38,7 @@ export const addNewPost = createAsyncThunk(
 export const updatePostThunk = createAsyncThunk(
   "posts/updatePost",
   async (updatedPost) => {
+    console.log(updatedPost)
     await updateDoc(doc(db, "notes", updatedPost.id), updatedPost);
     return updatedPost;
   }

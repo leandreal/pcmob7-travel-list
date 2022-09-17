@@ -14,7 +14,7 @@ export default function CameraScreen() {
   const [hasPermission, setHasPermission] = useState(null);
   const route = useRoute();
   const fromNotes = route.params?.fromNotes;
-
+  const fromDetails = route.params?.fromDetails;
 
   useEffect(() => {
     // Remove the bottom tab
@@ -36,7 +36,9 @@ export default function CameraScreen() {
     const photo = await cameraRef.current.takePictureAsync();
     
     await AsyncStorage.setItem("photo_uri", photo.uri);
-    navigation.navigate(fromNotes?NOTES_SCREEN.Add : PROFILE_SCREEN);
+    if(fromDetails)navigation.navigate(NOTES_SCREEN.Details)
+    else if(fromNotes)navigation.navigate(NOTES_SCREEN.Add)
+    else navigation.navigate(PROFILE_SCREEN);
   }
 
   useEffect(() => {
@@ -53,7 +55,9 @@ export default function CameraScreen() {
         <View style={additionalStyles.innerView}>
           <View style={additionalStyles.buttonView}>
             <TouchableOpacity
-              onPress={() => fromNotes?navigation.navigate(NOTES_SCREEN.Add): navigation.goBack()}
+              onPress={() => {
+                  navigation.goBack()
+              }}
               style={additionalStyles.circleButton}
             >
               <FontAwesome
