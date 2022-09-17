@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     UIManager,
     View,
+    Image,
   } from "react-native";
   import React, { useState, useEffect } from "react";
   import { useNavigation } from "@react-navigation/native";
@@ -95,6 +96,12 @@ import {
 
     return (
         <View style={styles.container}>
+          <View style={styles.header} >
+          <Image source={{uri: 'https://img.icons8.com/external-kiranshastry-gradient-kiranshastry/2x/external-checklist-airport-kiranshastry-gradient-kiranshastry.png'}}
+          style={{width: 100, height: 100}} />
+
+          <Text style={styles.logo}>Travel-List</Text>
+      </View>
           <Text style={styles.title}>
             {isLoginScreen ? "Login to your account" : "Register new account"}
           </Text>
@@ -169,6 +176,19 @@ import {
   }
   
   const styles = StyleSheet.create({
+    header: {
+      flexDirection: 'row',
+      paddingBottom: 30,
+      marginBottom: 20,
+    },
+
+    logo: {
+      fontWeight: "bold",
+      fontSize: 40,
+      margin: 20,
+      color: 'turquoise',
+    },
+
     buttonLoading: {
       backgroundColor: "black",
       borderRadius: 15,
@@ -195,6 +215,7 @@ import {
       fontWeight: "bold",
       fontSize: 40,
       marginBottom: 50,
+      color: "turquoise",
     },
     inputView: {
       backgroundColor: "#F1F0F5",
@@ -203,15 +224,17 @@ import {
       padding: 20,
     },
     button: {
-      backgroundColor: "black",
+      backgroundColor: "turquoise",
       borderRadius: 15,
-      width: "100%",
+      width: "50%",
+      alignSelf: "center",
+      
     },
     buttonText: {
       textAlign: "center",
       fontWeight: "400",
       fontSize: 17,
       padding: 20,
-      color: "white",
+      color: "black",
     },
   });
